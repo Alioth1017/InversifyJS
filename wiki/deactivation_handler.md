@@ -7,7 +7,7 @@ It is possible to add a deactivation handler for a type binded in singleton scop
 class Destroyable {
 }
 
-const container = new Container();
+const container: Container = new Container();
 container.bind<Destroyable>("Destroyable").toDynamicValue(() => Promise.resolve(new Destroyable())).inSingletonScope()
     .onDeactivation((destroyable: Destroyable) => {
         console.log("Destroyable service is about to be unbinded");
@@ -24,7 +24,7 @@ It's possible to add a deactivation handler in multiple ways
 - Adding the handler to a binding.
 - Adding the handler to the class through the [preDestroy decorator](./pre_destroy.md).
 
-Handlers added to the container are the first ones to be resolved. Any handler added to a child container is called before the ones added to their parent. Relevant bindings from the container are called next and finally the `preDestroy` method is called. In the example above, relevant bindings are those bindings bound to the unbinded "Destroyable" service identifer.
+Handlers added to the container are the first ones to be resolved. Any handler added to a child container is called before the ones added to their parent. Relevant bindings from the container are called next and finally the `preDestroy` method is called. In the example above, relevant bindings are those bindings bound to the unbinded "Destroyable" service identifier.
 
 The example below demonstrates call order.
 
@@ -47,7 +47,7 @@ class Destroyable {
     }
 }
 
-const container = new Container();
+const container: Container = new Container();
 container.onDeactivation("Destroyable", () => {
     return new Promise((presolve) => {
         parent = roll;

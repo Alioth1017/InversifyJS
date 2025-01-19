@@ -1,15 +1,18 @@
+> [!NOTE]
+> New docs are temporary available [here](https://inversify.io/monorepo/). We would love to have your feedback in this [discussion](https://github.com/inversify/monorepo/discussions/235).
+
 ![](https://raw.githubusercontent.com/inversify/inversify.github.io/master/img/cover.jpg)
 
 <p align="center">
-	<a href="https://www.npmjs.com/package/inversify" target="__blank"><img src="https://img.shields.io/npm/v/inversify?color=0476bc&label=" alt="NPM version"></a>
-	<a href="https://www.npmjs.com/package/inversify" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/inversify?color=3890aa&label="></a>
-	<a href="https://github.com/inversify/InversifyJS#-the-inversifyjs-features-and-api" target="__blank"><img src="https://img.shields.io/static/v1?label=&message=docs&color=1e8a7a" alt="Docs"></a>
-	<a href="https://codecov.io/gh/inversify/InversifyJS" target="__blank"><img alt="Codecov" src="https://codecov.io/gh/inversify/InversifyJS/branch/master/graph/badge.svg?token=KfAKzuGs01"></a>
-	<br>
-	<br>
-	<a href="https://github.com/inversify/InversifyJS" target="__blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/inversify/InversifyJS?style=social"></a>
-	<!--<a href="https://twitter.com/inversifyjs" target="__blank"><img alt="Twitter" src="https://img.shields.io/twitter/follow/InversifyJS.svg?maxAge=86400&style=social"></a>-->
-	<a href="https://discord.gg/jXcMagAPnm" target="__blank"><img alt="Discord Server" src="https://img.shields.io/discord/816766547879657532?style=social&logo=discord"></a>
+  <a href="https://www.npmjs.com/package/inversify" target="__blank"><img src="https://img.shields.io/npm/v/inversify?color=0476bc&label=" alt="NPM version"></a>
+  <a href="https://www.npmjs.com/package/inversify" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/inversify?color=3890aa&label="></a>
+  <a href="https://github.com/inversify/InversifyJS#-the-inversifyjs-features-and-api" target="__blank"><img src="https://img.shields.io/static/v1?label=&message=docs&color=1e8a7a" alt="Docs"></a>
+  <a href="https://codecov.io/gh/inversify/InversifyJS" target="__blank"><img alt="Codecov" src="https://codecov.io/gh/inversify/InversifyJS/branch/master/graph/badge.svg?token=KfAKzuGs01"></a>
+  <br>
+  <br>
+  <a href="https://github.com/inversify/InversifyJS" target="__blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/inversify/InversifyJS?style=social"></a>
+  <!--<a href="https://twitter.com/inversifyjs" target="__blank"><img alt="Twitter" src="https://img.shields.io/twitter/follow/InversifyJS.svg?maxAge=86400&style=social"></a>-->
+  <a href="https://discord.gg/jXcMagAPnm" target="__blank"><img alt="Discord Server" src="https://img.shields.io/discord/816766547879657532?style=social&logo=discord"></a>
 </p>
 
 # InversifyJS
@@ -63,24 +66,18 @@ You can get the latest release and the type definitions using your preferred pac
 > pnpm add inversify reflect-metadata
 ```
 
-> ❕**Hint!** If you want to use a more type-safe version of reflect-metadata, try [`@abraham/reflection`](https://www.npmjs.com/package/@abraham/reflection)
+`reflect-metadata` will be automatically imported by inversify.
 
 The InversifyJS type definitions are included in the inversify npm package.
 
-> :warning: **Important!** InversifyJS requires TypeScript >= 4.4 and the `experimentalDecorators`, `emitDecoratorMetadata`, `types` and `lib`
-compilation options in your `tsconfig.json` file.
+> :warning: **Important!** InversifyJS requires TypeScript >= 4.4 and the `experimentalDecorators`, `emitDecoratorMetadata`, compilation options in your `tsconfig.json` file.
 
 ```json
 {
-    "compilerOptions": {
-        "target": "es5",
-        "lib": ["es6"],
-        "types": ["reflect-metadata"],
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
-    }
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
 }
 ```
 
@@ -92,8 +89,6 @@ InversifyJS requires a modern JavaScript engine with support for:
 - [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (Only required if using [activation handlers](https://github.com/inversify/InversifyJS/blob/master/wiki/activation_handler.md))
 
 If your environment doesn't support one of these you will need to import a shim or polyfill.
-
-> :warning: **The `reflect-metadata` polyfill should be imported only once in your entire application** because the Reflect object is meant to be a global singleton. More details about this can be found [here](https://github.com/inversify/InversifyJS/issues/262#issuecomment-227593844).
 
 Check out the [Environment support and polyfills](https://github.com/inversify/InversifyJS/blob/master/wiki/environment.md)
 page in the wiki and the [Basic example](https://github.com/inversify/inversify-basic-example) to learn more.
@@ -126,6 +121,8 @@ export interface ThrowableWeapon {
 
 InversifyJS needs to use the type as identifiers at runtime. We use symbols as identifiers but you can also use classes and or string literals.
 
+PLEASE MAKE SURE TO PLACE THIS TYPES DECLARATION IN A SEPARATE FILE. (see bug #1455)
+
 ```ts
 // file types.ts
 
@@ -142,15 +139,14 @@ export { TYPES };
 > **Note**: It is recommended to use Symbols but InversifyJS also support the usage of Classes and string literals (please refer to the features section to learn more).
 
 ### Step 2: Declare dependencies using the `@injectable` & `@inject` decorators
-Let's continue by declaring some classes (concretions). The classes are implementations of the interfaces that we just declared. All the classes must be annotated with the `@injectable` decorator.
+Let's continue by declaring some classes (concretions). The classes are implementations of the interfaces that we just declared. We will annotate them with the `@injectable` decorator.
 
-When a class has a  dependency on an interface we also need to use the `@inject` decorator to define an identifier for the interface that will be available at runtime. In this case we will use the Symbols `Symbol.for("Weapon")` and `Symbol.for("ThrowableWeapon")` as runtime identifiers.
+When a class has a dependency on an interface we also need to use the `@inject` decorator to define an identifier for the interface that will be available at runtime. In this case we will use the Symbols `Symbol.for("Weapon")` and `Symbol.for("ThrowableWeapon")` as runtime identifiers.
 
 ```ts
 // file entities.ts
 
 import { injectable, inject } from "inversify";
-import "reflect-metadata";
 import { Weapon, ThrowableWeapon, Warrior } from "./interfaces";
 import { TYPES } from "./types";
 
@@ -174,9 +170,9 @@ class Ninja implements Warrior {
     private _katana: Weapon;
     private _shuriken: ThrowableWeapon;
 
-    public constructor(
-	    @inject(TYPES.Weapon) katana: Weapon,
-	    @inject(TYPES.ThrowableWeapon) shuriken: ThrowableWeapon
+    constructor(
+        @inject(TYPES.Weapon) katana: Weapon,
+        @inject(TYPES.ThrowableWeapon) shuriken: ThrowableWeapon
     ) {
         this._katana = katana;
         this._shuriken = shuriken;
